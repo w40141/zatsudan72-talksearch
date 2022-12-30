@@ -1,0 +1,25 @@
+[[package]]
+name = "whisper"
+version = "1.0"
+description = ""
+category = "main"
+optional = false
+python-versions = ">=3.7"
+develop = false
+
+[package.extras]
+dev = ["pytest"]
+
+[package.source]
+type = "git"
+url = "https://github.com/openai/whisper.git"
+reference = "HEAD"
+resolved_reference = "0b5dcfdef7ec04250b76e13f1630e32b0935ce76"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.10"
+content-hash = "3ae31537adef1a397b0cf44b314214fc1d4bc0ef6ec85d5bff38e78f7ea1b76a"
+
+[metadata.files]
+whisper = []
