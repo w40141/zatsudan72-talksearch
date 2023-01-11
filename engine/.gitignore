@@ -170,8 +170,6 @@ poetry.toml
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 
+*.m4a
 *.mp3
 *.wave
-*.txt
-*.srt
-*.vtt
