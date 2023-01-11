@@ -228,18 +228,6 @@ python-versions = ">=3.5"
 traitlets = "*"
 
 [[package]]
-name = "mecab-python3"
-version = "1.0.6"
-description = "Python wrapper for the MeCab morphological analyzer for Japanese"
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.extras]
-unidic = ["unidic"]
-unidic-lite = ["unidic-lite"]
-
-[[package]]
 name = "numpy"
 version = "1.24.1"
 description = "Fundamental package for array computing in Python"
@@ -478,6 +466,28 @@ pure-eval = "*"
 tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
 
 [[package]]
+name = "sudachidict-core"
+version = "20221021"
+description = "Sudachi Dictionary for SudachiPy - Core Edition"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+SudachiPy = ">=0.5,<0.7"
+
+[[package]]
+name = "sudachipy"
+version = "0.6.6"
+description = "Python version of Sudachi, the Japanese Morphological Analyzer"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+tests = ["sudachidict-core", "tokenizers"]
+
+[[package]]
 name = "tokenizers"
 version = "0.13.2"
 description = "Fast and Customizable Tokenizers"
@@ -637,14 +647,6 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
-name = "unidic-lite"
-version = "1.0.8"
-description = "A small version of UniDic packaged for Python"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "urllib3"
 version = "1.26.13"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -697,7 +699,7 @@ resolved_reference = "f82bc59f5ea234d4b97fb2860842ed38519f7e65"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "73f14bb400a8808fd8c4f4e21290472e5b63d2e2ccf5768e86a0518bd5d71327"
+content-hash = "609ef1515755e589d6d6408d6030472b4723b7a9d5565dac0b485fb87d48d444"
 
 [metadata.files]
 algoliasearch = [
@@ -770,31 +772,6 @@ jedi = [
 matplotlib-inline = [
     {file = "matplotlib-inline-0.1.6.tar.gz", hash = "sha256:f887e5f10ba98e8d2b150ddcf4702c1e5f8b3a20005eb0f74bfdbd360ee6f304"},
     {file = "matplotlib_inline-0.1.6-py3-none-any.whl", hash = "sha256:f1f41aab5328aa5aaea9b16d083b128102f8712542f819fe7e6a420ff581b311"},
-]
-mecab-python3 = [
-    {file = "mecab-python3-1.0.6.tar.gz", hash = "sha256:16f38ace484020bd3446a10054829678c1e7b97f1740b58b00a31d595cff025e"},
-    {file = "mecab_python3-1.0.6-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:0fb9f5a06f9cd9c5724608956128b91f5330248a78e9de322a0abd5beaba24a3"},
-    {file = "mecab_python3-1.0.6-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:6c99ec5f5581e4b56c8b68b4eeac4c6b59c6de12e66a2cfe4b1c6f8e87d38bd7"},
-    {file = "mecab_python3-1.0.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:30177272efa6ba26909b540e3816659c9f93ee49a5cc2b8ea47c17eff05c686b"},
-    {file = "mecab_python3-1.0.6-cp310-cp310-win_amd64.whl", hash = "sha256:fd10ba05f94dea7fe5e281336b7a4d07f79062c25139077d935833d0db303450"},
-    {file = "mecab_python3-1.0.6-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:023cfd4efa26fc61563ee185e8ac3d5fcdffcaba01931bbae34aa0ec06814875"},
-    {file = "mecab_python3-1.0.6-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3eb8655d4eb7e17dbe7f409b8dda327539de9ee8cf06ebe338aa595bb597b53d"},
-    {file = "mecab_python3-1.0.6-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a455f0f1830392548366aae56819a22fa0f5786c39c4cf6cf84fe438a5fc7cbc"},
-    {file = "mecab_python3-1.0.6-cp311-cp311-win_amd64.whl", hash = "sha256:e28997040b5ea9df3cf8969c5d28e7ba730ef4f924badac0548cd14383e56c66"},
-    {file = "mecab_python3-1.0.6-cp36-cp36m-macosx_10_14_x86_64.whl", hash = "sha256:2958a94ee7ed521e95c333a7b66adcead9973db3d4f4873789c425d41726e52c"},
-    {file = "mecab_python3-1.0.6-cp36-cp36m-win_amd64.whl", hash = "sha256:c80e58dcc90da095b64799950046dc4b9db3fb6bf30a8f817d1639cdaf601ba1"},
-    {file = "mecab_python3-1.0.6-cp37-cp37m-macosx_10_15_x86_64.whl", hash = "sha256:8f0c5fe224c28ebd6fad2199be129755246091310de71eb9a43d88473d5b8950"},
-    {file = "mecab_python3-1.0.6-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e049805f8342020b559357f4ea2b69b7d4faf8681c979ffd868d4d25d3a89021"},
-    {file = "mecab_python3-1.0.6-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b56692cef89cd8ad0179bd2f989e4b3209686eb59124e0191167d9a3e64cd1a0"},
-    {file = "mecab_python3-1.0.6-cp37-cp37m-win_amd64.whl", hash = "sha256:68334cbc6e0442ccd57770137ece585de9a512f01405bd2ad074fd28578180f8"},
-    {file = "mecab_python3-1.0.6-cp38-cp38-macosx_10_15_x86_64.whl", hash = "sha256:ef43e4ab82396d1a59f4d8e2237c4136e09391e8e8ba623af4b52e6b52377fdd"},
-    {file = "mecab_python3-1.0.6-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:fde76ebc2fcf4f375b520a706af316f88be304302f5e5d36105992a1ecd3ea1b"},
-    {file = "mecab_python3-1.0.6-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:849aa7cfb828f0fb65340666fb2ae281855f5319699291121e116f43f478401c"},
-    {file = "mecab_python3-1.0.6-cp38-cp38-win_amd64.whl", hash = "sha256:d1061bcd3d5567d6522e8794773689e6f9dedadcd3d3b1652893142f6334ec95"},
-    {file = "mecab_python3-1.0.6-cp39-cp39-macosx_10_15_x86_64.whl", hash = "sha256:b2a3b6243d709ccf6672d54c9c17cb6281a17737626caaafb0219944835d6b9c"},
-    {file = "mecab_python3-1.0.6-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b8c995629aeb6bdddf37eee1c4049549ff1993e3888e28eb6cc59c8dce79de41"},
-    {file = "mecab_python3-1.0.6-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e00f0c329c7708b6cf5e5b2b1772535de3d6d69f99e6105a1acf40b94c62afe5"},
-    {file = "mecab_python3-1.0.6-cp39-cp39-win_amd64.whl", hash = "sha256:9c3eeb4adf864a74ced9a1c5443b174f1e851323143ca6f24391fb6db8d44110"},
 ]
 numpy = [
     {file = "numpy-1.24.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:179a7ef0889ab769cc03573b6217f54c8bd8e16cef80aad369e1e8185f994cd7"},
@@ -1102,6 +1079,24 @@ stack-data = [
     {file = "stack_data-0.6.2-py3-none-any.whl", hash = "sha256:cbb2a53eb64e5785878201a97ed7c7b94883f48b87bfb0bbe8b623c74679e4a8"},
     {file = "stack_data-0.6.2.tar.gz", hash = "sha256:32d2dd0376772d01b6cb9fc996f3c8b57a357089dec328ed4b6553d037eaf815"},
 ]
+sudachidict-core = [
+    {file = "SudachiDict-core-20221021.tar.gz", hash = "sha256:30eaede52d446204d87b8f9e9873759a82d2b7b66d8b7511d56aeec4ecf91e2e"},
+]
+sudachipy = [
+    {file = "SudachiPy-0.6.6-cp310-cp310-macosx_10_12_universal2.whl", hash = "sha256:368ccd29af99a8953f38e47a7ad9998de7259c98796e79ddbf62b635f1bfcea1"},
+    {file = "SudachiPy-0.6.6-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:e886a54ed4d0ee3480baed6aa436e62491a8c6ec68b8ee4197e7b2c26485d2ed"},
+    {file = "SudachiPy-0.6.6-cp310-cp310-win_amd64.whl", hash = "sha256:4f0df5b8fe46952ee6104593831a9d86ecb7a50a506d361205197845b43564eb"},
+    {file = "SudachiPy-0.6.6-cp37-cp37m-macosx_10_12_universal2.whl", hash = "sha256:22de4c664df408a2ab9f2931f0f9ba896a3c31bc914e1d92505cf7abc649ec16"},
+    {file = "SudachiPy-0.6.6-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:00001529148d1d4a243497930da178ca0336563a164abbca915e29097faf2434"},
+    {file = "SudachiPy-0.6.6-cp37-cp37m-win_amd64.whl", hash = "sha256:f0b272aa517e6cf24624d359382a81f34bc7503443c482509b517e3cae0c40d7"},
+    {file = "SudachiPy-0.6.6-cp38-cp38-macosx_10_12_universal2.whl", hash = "sha256:9ca0dfde031c6371ca0c4ab22b30d24bf3c5073ef1fc4290c4ab967356c43c35"},
+    {file = "SudachiPy-0.6.6-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:189a7ba740664b6a09a31b8b3b69f086237f63b9890caf8f497186a85e3750b6"},
+    {file = "SudachiPy-0.6.6-cp38-cp38-win_amd64.whl", hash = "sha256:210b1dbd1a9f736a316b319948d29c0d858d4f5567f699ae07ea7111b13f84cb"},
+    {file = "SudachiPy-0.6.6-cp39-cp39-macosx_10_12_universal2.whl", hash = "sha256:89db02123eb8bb652cfaa2c0a2ead812fde0d8113d53f89ec2ae4aa6d7fce6c5"},
+    {file = "SudachiPy-0.6.6-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:2cc849e20ff1994a3acf2c91f0d81ff56ce0f99d6cf073bcf2538ce07923f5e2"},
+    {file = "SudachiPy-0.6.6-cp39-cp39-win_amd64.whl", hash = "sha256:f11075d850ac20dfab872f688ffa0de381c42289bbfcbd9dba6e52d80d308d9f"},
+    {file = "SudachiPy-0.6.6.tar.gz", hash = "sha256:5e9f719c68cf57a4e4854a51fe0a2f4b343299464aeb680c968c9e34b017aef4"},
+]
 tokenizers = [
     {file = "tokenizers-0.13.2-cp310-cp310-macosx_10_11_x86_64.whl", hash = "sha256:a6f36b1b499233bb4443b5e57e20630c5e02fba61109632f5e00dab970440157"},
     {file = "tokenizers-0.13.2-cp310-cp310-macosx_12_0_arm64.whl", hash = "sha256:bc6983282ee74d638a4b6d149e5dadd8bc7ff1d0d6de663d69f099e0c6bddbeb"},
@@ -1220,9 +1215,6 @@ transformers = [
 typing-extensions = [
     {file = "typing_extensions-4.4.0-py3-none-any.whl", hash = "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"},
     {file = "typing_extensions-4.4.0.tar.gz", hash = "sha256:1511434bb92bf8dd198c12b1cc812e800d4181cfcb867674e0f8279cc93087aa"},
-]
-unidic-lite = [
-    {file = "unidic-lite-1.0.8.tar.gz", hash = "sha256:db9d4572d9fdd4d00a97949d4b0741ec480ee05a7e7e2e32f547500dae27b245"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.13-py2.py3-none-any.whl", hash = "sha256:47cc05d99aaa09c9e72ed5809b60e7ba354e64b59c9c173ac3018642d8bb41fc"},
