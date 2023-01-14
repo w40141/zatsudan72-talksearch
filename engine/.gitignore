@@ -173,3 +173,4 @@ poetry.toml
 *.m4a
 *.mp3
 *.wave
+*.music
