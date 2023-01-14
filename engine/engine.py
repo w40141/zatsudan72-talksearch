@@ -32,9 +32,11 @@ class Episode:
         with open(fpath, mode="wb") as f:
             f.write(data)
 
-    def analyse_media(self, model="medium") -> Nouns:
+    def analyze_media(self, model="medium") -> Nouns:
+        print("Start transcription")
         text: str = self._transcription_media(model)
-        return self._analyse_text(text)
+        print("Start analyze")
+        return self._analyze_text(text)
 
     def _transcription_media(self, model) -> str:
         model = whisper.load_model(model)
@@ -42,8 +44,7 @@ class Episode:
         result = model.transcribe(fpath, language="ja")
         return result["text"]
 
-    # 4. 形態素解析する
-    def _analyse_text(self, text: str) -> Nouns:
+    def _analyze_text(self, text: str) -> Nouns:
         mode = tokenizer.Tokenizer.SplitMode.C
         tokenizer_obj = dictionary.Dictionary().create()
         tokens = tokenizer_obj.tokenize(text, mode)
@@ -90,12 +91,11 @@ class Engine:
 
     def _run_episode(self, episode, index):
         print("Start: " + episode.title)
-        nouns = episode.analyse_media()
+        nouns = episode.analyze_media()
         episode.post_episode(index, nouns)
         episode.remove_media()
         print("End: " + episode.title)
 
-    # 1. RSSからエピソードの取得する
     def get_episode(self) -> Episodes:
         d = feedparser.parse(self.rss)
         return list(filter(None, [self._transform_entry(entry) for entry in d.entries]))
@@ -112,18 +112,17 @@ class Engine:
                     entry.published,
                 )
 
-    # 2. エピソードをダウンロードする
     def download_episodes(self, episodes: Episodes) -> Episodes:
         recodes = self._get_recodes()
         downloaded_episodes = []
         for episode in episodes:
             object_id = episode.object_id
             if object_id not in recodes:
+                print("Download: " + episode.title)
                 episode.download_episode()
                 downloaded_episodes.append(episode)
         return downloaded_episodes
 
-    # 2-1. indexを取得する
     def _get_recodes(self):
         index = self.algolia_index()
         return [
