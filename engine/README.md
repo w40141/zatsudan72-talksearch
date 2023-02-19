@@ -1,4 +1,4 @@
-# engine.py
+# 
 
 RSSフィードからポッドキャストの音声をダウンロードし、Algoliaへインデックスを追加するスクリプト
 
@@ -23,3 +23,11 @@ python main.py
     ```bash
     poetry update
     ```
+
+## 設定ファイル（.env）
+```
+PODCAST_RSS=https://hogehoge/fugafuga/rss
+INDEX_NAME=INDEX_NAME (AlgoliaのIndex名)
+ALGOLIA_APP_ID=ALGOLIA_APP_ID
+ALGOLIA_APP_KEY=ALGOLIA_APP_KEY (権限をsearch, browse, addObjectにする)
+```
