@@ -98,7 +98,6 @@ class Engine:
         self.index_name: str = os.getenv("INDEX_NAME", "")
         self.app_id: str = os.getenv("ALGOLIA_APP_ID", "")
         self.app_key: str = os.getenv("ALGOLIA_APP_KEY", "")
-        self.dir = "./media/"
         self.index = self._algolia_index()
 
     def _algolia_index(self):
