@@ -252,5 +252,5 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,python,windows,vim
 
-media
-!media/.gitkeep
+media/*.music
+!/media/.gitkeep
