@@ -1,6 +1,6 @@
 import os
 import urllib.request
-from typing import Any, Iterable, TypeAlias
+from typing import Any, Iterable, TypeAlias, Union
 
 import feedparser
 import whisper
@@ -14,11 +14,20 @@ Nouns: TypeAlias = set[str]
 
 class Episode:
     def __init__(
-        self, id: str, title: str, itunes_episode: str, href: str, published: str
+        self,
+        id: str,
+        title: str,
+        itunes_episode: int,
+        summary: str,
+        length: str,
+        href: str,
+        published: str,
     ):
         self.object_id = id
         self.title = title
         self.episode_number = itunes_episode
+        self.summary = summary
+        self.length = length
         self.media_url = href
         self.published = published
         self.dir = "./media/"
@@ -27,16 +36,20 @@ class Episode:
         return self.dir + self.object_id + ".music"
 
     def download_episode(self):
+        print("Download: " + self.title)
         data = urllib.request.urlopen(self.media_url).read()
         fpath = self._fpath()
         with open(fpath, mode="wb") as f:
             f.write(data)
 
-    def analyze_media(self, model="medium") -> Nouns:
+    def analyze_media(self, model="medium") -> dict[str, Union[str, Nouns]]:
         print("Start transcription")
         text: str = self._transcription_media(model)
+        object = {"content": text}
         print("Start analyze")
-        return self._analyze_text(text)
+        nouns = self._analyze_text(text)
+        object |= {"nouns": list(nouns)}
+        return object
 
     def _transcription_media(self, model) -> str:
         model = whisper.load_model(model)
@@ -52,21 +65,30 @@ class Episode:
             [token.surface() for token in tokens if token.part_of_speech()[0] == "名詞"]
         )
 
-    def post_episode(self, index, nouns: Nouns):
-        object = self._make_object() | {"nouns": list(nouns)}
+    def post_episode(self, index):
+        object = self.analyze_media()
+        object |= self._make_object()
         index.save_object(object)
 
-    def _make_object(self) -> dict[str, str]:
+    def _make_object(self) -> dict[str, str | int]:
         return {
             "objectID": self.object_id,
             "title": self.title,
             "episodeNumber": self.episode_number,
+            "summary": self.summary,
+            "length": self.length,
             "mediaUrl": self.media_url,
             "published": self.published,
         }
 
     def remove_media(self):
         os.remove(self._fpath())
+
+    def run(self, index):
+        print("Start: " + self.title)
+        self.post_episode(index)
+        self.remove_media()
+        print("End: " + self.title)
 
 
 class Engine:
@@ -77,55 +99,43 @@ class Engine:
         self.app_id: str = os.getenv("ALGOLIA_APP_ID", "")
         self.app_key: str = os.getenv("ALGOLIA_APP_KEY", "")
         self.dir = "./media/"
+        self.index = self._algolia_index()
 
-    def algolia_index(self):
+    def _algolia_index(self):
         client = SearchClient.create(self.app_id, self.app_key)
         return client.init_index(self.index_name)
 
     def run(self):
         episodes = self.get_episode()
-        downloaded_episodes = self.download_episodes(episodes)
-        index = self.algolia_index()
-        for episode in downloaded_episodes:
-            self._run_episode(episode, index)
-
-    def _run_episode(self, episode, index):
-        print("Start: " + episode.title)
-        nouns = episode.analyze_media()
-        episode.post_episode(index, nouns)
-        episode.remove_media()
-        print("End: " + episode.title)
+        recodes = self.get_recodes()
+        for episode in episodes:
+            if episode.object_id in recodes:
+                continue
+            episode.download_episode()
+            episode.run(self.index)
 
     def get_episode(self) -> Episodes:
         d = feedparser.parse(self.rss)
         return list(filter(None, [self._transform_entry(entry) for entry in d.entries]))
 
-    def _transform_entry(self, entry: Any) -> Any:
+    def _transform_entry(self, entry: Any) -> Episode:
         links = entry.links
         for link in links:
             if link.rel == "enclosure":
                 return Episode(
                     entry.id,
                     entry.title,
-                    entry.itunes_episode if entry.has_key("itunes_episode") else "0",
+                    int(entry.itunes_episode)
+                    if entry.has_key("itunes_episode")
+                    else "0",
+                    entry.summary,
+                    entry.itunes_duration,
                     link.href,
                     entry.published,
                 )
 
-    def download_episodes(self, episodes: Episodes) -> Episodes:
-        recodes = self._get_recodes()
-        downloaded_episodes = []
-        for episode in episodes:
-            object_id = episode.object_id
-            if object_id not in recodes:
-                print("Download: " + episode.title)
-                episode.download_episode()
-                downloaded_episodes.append(episode)
-        return downloaded_episodes
-
-    def _get_recodes(self):
-        index = self.algolia_index()
+    def get_recodes(self):
         return [
             id["objectID"]
-            for id in index.browse_objects({"attributesToRetrieve": ["objectID"]})
+            for id in self.index.browse_objects({"attributesToRetrieve": ["objectID"]})
         ]

@@ -7,7 +7,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-whisper = {git = "https://github.com/openai/whisper.git"}
 torch = "^1.13.1"
 torchvision = "^0.14.1"
 torchaudio = "^0.13.1"
@@ -19,6 +18,7 @@ python-dotenv = "^0.21.0"
 ffmpeg-python = "^0.2.0"
 sudachipy = "^0.6.6"
 sudachidict-core = "^20221021"
+openai-whisper = {git = "https://github.com/openai/whisper.git"}
 
 
 [tool.poetry.group.dev.dependencies]
