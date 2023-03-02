@@ -42,17 +42,16 @@ class Episode:
         with open(fpath, mode="wb") as f:
             f.write(data)
 
-    def analyze_media(self, model="medium") -> dict[str, Union[str, Nouns]]:
+    def analyze_media(self, model) -> dict[str, list[str]]:
         print("Start transcription")
         text: str = self._transcription_media(model)
-        object = {"content": text}
         print("Start analyze")
         nouns = self._analyze_text(text)
-        object |= {"nouns": list(nouns)}
+        object = {"nouns": list(nouns)}
         return object
 
     def _transcription_media(self, model) -> str:
-        model = whisper.load_model(model)
+        # model = whisper.load_model(model)
         fpath = self._fpath()
         result = model.transcribe(fpath, language="ja")
         return result["text"]
@@ -65,8 +64,7 @@ class Episode:
             [token.surface() for token in tokens if token.part_of_speech()[0] == "名詞"]
         )
 
-    def post_episode(self, index):
-        object = self.analyze_media()
+    def post_episode(self, index, object):
         object |= self._make_object()
         index.save_object(object)
 
@@ -84,21 +82,23 @@ class Episode:
     def remove_media(self):
         os.remove(self._fpath())
 
-    def run(self, index):
+    def run(self, index, model):
         print("Start: " + self.title)
-        self.post_episode(index)
+        object = self.analyze_media(model)
+        self.post_episode(index, object)
         self.remove_media()
         print("End: " + self.title)
 
 
 class Engine:
-    def __init__(self):
+    def __init__(self, model="medium"):
         load_dotenv()
         self.rss: str = os.getenv("PODCAST_RSS", "")
         self.index_name: str = os.getenv("INDEX_NAME", "")
         self.app_id: str = os.getenv("ALGOLIA_APP_ID", "")
         self.app_key: str = os.getenv("ALGOLIA_APP_KEY", "")
         self.index = self._algolia_index()
+        self.model = whisper.load_model(model)
 
     def _algolia_index(self):
         client = SearchClient.create(self.app_id, self.app_key)
@@ -111,13 +111,13 @@ class Engine:
             if episode.object_id in recodes:
                 continue
             episode.download_episode()
-            episode.run(self.index)
+            episode.run(self.index, self.model)
 
     def get_episode(self) -> Episodes:
         d = feedparser.parse(self.rss)
         return list(filter(None, [self._transform_entry(entry) for entry in d.entries]))
 
-    def _transform_entry(self, entry: Any) -> Episode:
+    def _transform_entry(self, entry: Any) -> "Episode":
         links = entry.links
         for link in links:
             if link.rel == "enclosure":
@@ -126,7 +126,7 @@ class Engine:
                     entry.title,
                     int(entry.itunes_episode)
                     if entry.has_key("itunes_episode")
-                    else "0",
+                    else 0,
                     entry.summary,
                     entry.itunes_duration,
                     link.href,
